@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MassTransit.RabbitMQ" Version="5.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.0"><PrivateAssets Condition="'%(PackageReference.Version)' == ''">all</PrivateAssets>
+<Publish Condition="'%(PackageReference.Version)' == ''">true</Publish>
+</PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MessageContracts\MessageContracts.csproj">
+    </ProjectReference>
+  </ItemGroup>
+</Project>
