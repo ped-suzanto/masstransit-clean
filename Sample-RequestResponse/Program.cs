@@ -1,4 +1,4 @@
-﻿using Infrastructure.Hub;
+﻿using Infrastructure.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SampleRequestResponse;
@@ -14,7 +14,7 @@ namespace Sample_RequestResponse
               .ConfigureServices((hostContext, services) =>
               {
                   services.AddTransient<YourMessageCommandHandler>();
-                  services.AddBusConsumerServices();
+                  services.AddServiceBusConsumers();
               });
 
             await builder

@@ -1,5 +1,7 @@
-﻿using Infrastructure.Hub;
+﻿using Infrastructure.ServiceBus;
 using MessageContracts;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System;
 using System.Threading.Tasks;
 
@@ -9,16 +11,15 @@ namespace Sample_Publish
     {
         static async Task Main(string[] args)
         {
-            using(var bus = new RabbitMqHub())
-            {
-                var command = new YourMessageCommand { CorrelationId = new Guid(), Database = "balibible", Table = "ads_type", Type = "insert", Ts = DateTime.Now, Xid = 162, Commit = true, Data = new Ads { Id = 11, Name = "test", Status = "active" } };
-                await bus.Send<UpdateIndex>(new { CorrelationId = new Guid(), Database = "balibible" });
-                var result = await bus.SendRequest<YourMessageCommand, YourMessageCommand>(command);
+            var builder = new HostBuilder()
+              .ConfigureServices((hostContext, services) =>
+              {
+                  services.AddServiceBus();
+                  services.AddHostedService<MessagePublisherService>();
+              });
 
-                Console.WriteLine("Press any key to exit");
-                Console.ReadKey();
-                Console.WriteLine("Bye");
-            }
+            await builder
+              .RunConsoleAsync();
         }
     }
 }

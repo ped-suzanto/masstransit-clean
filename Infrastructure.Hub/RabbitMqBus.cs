@@ -1,16 +1,20 @@
 ﻿using Application;
 using MassTransit;
+using MassTransit.RabbitMqTransport;
 using System;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Hub
+namespace Infrastructure.ServiceBus
 {
-    public class RabbitMqHub : IHub, IDisposable
+    public class RabbitMqBus : IServiceBus
     {
-        private readonly IBusControl _bus;
+        protected readonly IBusControl _bus;
+        protected readonly IServiceProvider _serviceProvider;
 
-        public RabbitMqHub()
+        public RabbitMqBus(IServiceProvider serviceProvider)
         {
+            _serviceProvider = serviceProvider;
+
             _bus = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
                 var host = cfg.Host(new Uri("rabbitmq://vulture.rmq.cloudamqp.com/itskeoul"), h =>
@@ -19,14 +23,22 @@ namespace Infrastructure.Hub
                     h.Password("MgnokgkE3inCySH4EaAOpcjwyoik0LrH");
                 });
 
+                Configure(cfg, host);
             });
-
-            _bus.Start();
         }
 
-        public void Dispose()
+        protected virtual void Configure(IRabbitMqBusFactoryConfigurator cfg, IRabbitMqHost host)
         {
-            _bus.Stop();
+        }
+
+        public Task StartAsync()
+        {
+            return _bus.StartAsync();
+        }
+
+        public Task StopAsync()
+        {
+            return _bus.StopAsync();
         }
 
         public async Task Publish<TMessage>(TMessage message) where TMessage : class

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Sample.SecondService
 {
-    public class YourMessageCommandHandler : ICommandHandler<UpdateIndex>
+    public class YourMessageCommandHandler : IEventHandler<UpdateIndex>
     {
         public async Task Handle(UpdateIndex message)
         {

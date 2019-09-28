@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Sample.SecondService
 {
-    public class YourMessageSecondHandler : IRequestHandler<YourMessageCommand, YourMessageCommand>
+    public class YourMessageSecondHandler : IRequestHandler<YourMessageEvent, YourMessageEvent>
     {
-        public async Task<YourMessageCommand> Handle(YourMessageCommand message)
+        public async Task<YourMessageEvent> Handle(YourMessageEvent message)
         {
             var appName = AppDomain.CurrentDomain.FriendlyName;
             await Console.Out.WriteLineAsync($"Received 2nd - {appName} : {message.Database}");

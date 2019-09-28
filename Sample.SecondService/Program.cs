@@ -1,4 +1,4 @@
-﻿using Infrastructure.Hub;
+﻿using Infrastructure.ServiceBus;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
@@ -14,7 +14,7 @@ namespace Sample.SecondService
              {
                  services.AddTransient<YourMessageCommandHandler>();
                  services.AddTransient<YourMessageSecondHandler>();
-                 services.AddBusConsumerServices();
+                 services.AddServiceBusConsumers();
              });
 
             await builder

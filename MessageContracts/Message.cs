@@ -14,7 +14,7 @@ namespace MessageContracts
         Ads Data { get; }
     }
 
-    public class YourMessageCommand : UpdateIndex
+    public class YourMessageEvent : UpdateIndex
     {
         public Guid CorrelationId { get; set; }
         public string Database { get; set; }

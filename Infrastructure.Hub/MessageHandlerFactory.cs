@@ -1,7 +1,7 @@
 ﻿using Application;
 using MassTransit;
 
-namespace Infrastructure.Hub
+namespace Infrastructure.ServiceBus
 {
     public class MessageHandlerFactory<TMessage> where TMessage : class
     {
