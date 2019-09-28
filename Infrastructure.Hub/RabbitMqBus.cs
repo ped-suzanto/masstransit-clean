@@ -10,17 +10,19 @@ namespace Infrastructure.ServiceBus
     {
         protected readonly IBusControl _bus;
         protected readonly IServiceProvider _serviceProvider;
+        protected readonly RabbitMqConfiguration _configuration;
 
-        public RabbitMqBus(IServiceProvider serviceProvider)
+        public RabbitMqBus(IServiceProvider serviceProvider, RabbitMqConfiguration configuration)
         {
             _serviceProvider = serviceProvider;
+            _configuration = configuration;
 
             _bus = Bus.Factory.CreateUsingRabbitMq(cfg =>
             {
-                var host = cfg.Host(new Uri("rabbitmq://vulture.rmq.cloudamqp.com/itskeoul"), h =>
+                var host = cfg.Host(new Uri(_configuration.Host), h =>
                 {
-                    h.Username("itskeoul");
-                    h.Password("MgnokgkE3inCySH4EaAOpcjwyoik0LrH");
+                    h.Username(_configuration.Username);
+                    h.Password(_configuration.Password);
                 });
 
                 Configure(cfg, host);
@@ -48,13 +50,13 @@ namespace Infrastructure.ServiceBus
 
         public async Task Send<TCommand>(object command) where TCommand : class
         {
-            var sendEndpoint = await _bus.GetSendEndpoint(new Uri("rabbitmq://vulture.rmq.cloudamqp.com/itskeoul/commands"));
+            var sendEndpoint = await _bus.GetSendEndpoint(new Uri($"{_configuration.Host}/${_configuration.CommandQueue}"));
             await sendEndpoint.Send<TCommand>(command);
         }
 
         public async Task<TReturn> SendRequest<TCommand, TReturn>(TCommand command) where TCommand : class where TReturn : class
         {
-            var client = _bus.CreateRequestClient<TCommand>(new Uri("rabbitmq://vulture.rmq.cloudamqp.com/itskeoul/command-requests"));
+            var client = _bus.CreateRequestClient<TCommand>(new Uri($"{_configuration.Host}/${_configuration.CommandRequestQueue}"));
             var response = await client.GetResponse<TReturn>(command);
 
             return response.Message;

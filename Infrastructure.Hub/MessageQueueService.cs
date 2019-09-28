@@ -12,8 +12,8 @@ namespace Infrastructure.ServiceBus
 {
     public class MessageQueueService : RabbitMqBus, IHostedService
     {
-        public MessageQueueService(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        public MessageQueueService(IServiceProvider serviceProvider, RabbitMqConfiguration configuration)
+            : base(serviceProvider, configuration)
         {
         }
 
@@ -44,12 +44,12 @@ namespace Infrastructure.ServiceBus
 
             if (handlerTypes.ContainsKey(commandHandlerType))
             {
-                ConfigureHandlers(cfg, host, "commands", commandHandlerType, handlerTypes[commandHandlerType]);
+                ConfigureHandlers(cfg, host, _configuration.CommandQueue, commandHandlerType, handlerTypes[commandHandlerType]);
             }
 
             if (handlerTypes.ContainsKey(requestHandlerType))
             {
-                ConfigureHandlers(cfg, host, "command-requests", requestHandlerType, handlerTypes[requestHandlerType]);
+                ConfigureHandlers(cfg, host, _configuration.CommandRequestQueue, requestHandlerType, handlerTypes[requestHandlerType]);
             }
         }
 

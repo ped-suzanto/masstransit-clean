@@ -9,11 +9,13 @@ namespace Infrastructure.ServiceBus
     {
         public static void AddServiceBus(this IServiceCollection services)
         {
+            services.AddSingleton(new RabbitMqConfiguration());
             services.AddSingleton<IServiceBus, RabbitMqBus>();
         }
 
         public static void AddServiceBusConsumers(this IServiceCollection services)
         {
+            services.AddSingleton(new RabbitMqConfiguration());
             services.AddHostedService<MessageQueueService>();
         }
 
